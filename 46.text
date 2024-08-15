@@ -1,0 +1,214 @@
+a. Read the data of a student containing usn, name, sem, year_of_admission 
+from node js and store it in the mongodb  
+b. For a partial name given in node js, search all the names from mongodb 
+student documents created in Question(a) 
+Storing in mongodb script 
+const { MongoClient } = require('mongodb'); 
+// Connection URL 
+const url = 'mongodb://localhost:27017'; 
+// Database Name 
+const dbName = 'school'; 
+// Create a new MongoClient 
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true }); 
+async function main() { 
+  try { 
+    // Connect the client to the server 
+    await client.connect(); 
+    console.log("Connected successfully to server"); 
+    // Specify the database to use 
+    const db = client.db(dbName); 
+    // Specify the collection to use 
+    const collection = db.collection('students'); 
+    // Student data to be inserted 
+    const studentData = { 
+      usn: '1MS20CS001', 
+      name: 'John Doe', 
+      sem: 6, 
+      year_of_admission: 2020 
+    }; 
+    // Insert the student data into the collection 
+    const insertResult = await collection.insertOne(studentData); 
+    console.log('Inserted document:', insertResult.ops); 
+  } catch (err) { 
+    console.error(err); 
+  } finally { 
+    // Close the connection 
+    await client.close(); 
+  } 
+} 
+// Run the main function 
+main().catch(console.error); 
+Searching script 
+const { MongoClient } = require('mongodb'); 
+// Connection URL 
+const url = 'mongodb://localhost:27017'; 
+// Database Name 
+const dbName = 'school'; 
+// Create a new MongoClient 
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true }); 
+async function searchStudentsByName(partialName) { 
+  try { 
+    // Connect the client to the server 
+    await client.connect(); 
+    console.log("Connected successfully to server"); 
+    // Specify the database to use 
+    const db = client.db(dbName); 
+    // Specify the collection to use 
+    const collection = db.collection('students'); 
+    // Create a case-insensitive regex for the partial name 
+    const regex = new RegExp(partialName, 'i'); 
+    // Search for students with names that match the regex 
+    const results = await collection.find({ name: regex }).toArray(); 
+    // Print the search results 
+    console.log('Search results:', results); 
+  } catch (err) { 
+    console.error('Error occurred:', err); 
+  } finally { 
+    // Close the connection 
+    await client.close(); 
+  } 
+} 
+// Example search 
+const partialName = 'John'; // Change this to test other partial names 
+searchStudentsByName(partialName).catch(console.error); 
+ 
+  
+Optional Combined Code for 4a and 4b. 
+const { MongoClient } = require('mongodb'); 
+// Connection URL 
+const url = 'mongodb://localhost:27017'; 
+// Database Name 
+const dbName = 'school'; 
+// Create a new MongoClient 
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true }); 
+async function main() { 
+  try { 
+    // Connect the client to the server 
+    await client.connect(); 
+    console.log("Connected successfully to server"); 
+    // Specify the database to use 
+    const db = client.db(dbName); 
+    // Specify the collection to use 
+    const collection = db.collection('students'); 
+    // Student data to be inserted 
+    const studentData = { 
+      usn: '1MS20CS001', 
+      name: 'John Doe', 
+      sem: 6, 
+      year_of_admission: 2020 
+    }; 
+    // Insert the student data into the collection 
+    const insertResult = await collection.insertOne(studentData); 
+    console.log('Inserted document:', insertResult.ops); 
+    // Function to search for names based on a partial match 
+    async function searchStudentsByName(partialName) { 
+      const regex = new RegExp(partialName, 'i'); // Create a case-insensitive regex 
+      const results = await collection.find({ name: regex }).toArray(); 
+      return results; 
+    } 
+    // Example search 
+    const partialName = 'ABC'; // Change this to test other partial names 
+    const searchResults = await searchStudentsByName(partialName); 
+    console.log('Search results:', searchResults); 
+  } catch (err) { 
+    console.error('Error occurred:', err); 
+  } finally { 
+    // Close the connection 
+    await client.close(); 
+  } 
+} 
+// Run the main function 
+main().catch(console.error); 
+ 
+
+
+
+
+
+
+Develop the application that sends fruit name and price data from client side to 
+Node.js server using Ajax. 
+STEPS TO FOLLOW: 
+• Open your USN folder in VS Code 
+• Create a new directory or folder called 6th_prog (else open this folder in 
+VS Code) 
+• Get inside that folder (If you have opened the 6th_prog folder in VS Code 
+ignore this step) 
+• Open Terminal in VS Code and write the following commands 
+o npm init -y 
+o npm install express body-parser 
+• Create a 2 new folder called server and client. 
+• Inside server folder create a new file called server.js and write the 
+server/backend script. 
+• Inside client folder create 2 new file called index.html and script.js for your 
+frontend/Client side and write the scripts here. 
+Server/server.js 
+const express = require('express'); 
+const bodyParser = require('body-parser'); 
+const app = express(); 
+const path = require('path'); 
+const port = 3000; 
+app.use(express.static(path.join(__dirname, '../client'))); 
+app.use(bodyParser.json()); 
+app.post('/addFruit', (req, res) => { 
+  const { name, price } = req.body; 
+//   console.log('Fruit Name: ${name}, Price: ${price}'); 
+  console.log('Fruit Name: ' + name + ', Price: ' + price); 
+  res.send('Fruit data received'); 
+}); 
+app.listen(port, () => { 
+//   console.log(`Server running at http://localhost:${port}/`); 
+  console.log('Server running at http://localhost:'+port+'/'); 
+}); 
+Client/index.html 
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Fruit App</title> 
+</head> 
+<body> 
+  <h1>Fruit App</h1> 
+  <form id="fruitForm"> 
+    <label for="name">Fruit Name:</label> 
+    <input type="text" id="name" name="name" required> 
+    <br> 
+    <label for="price">Price:</label> 
+    <input type="number" id="price" name="price" required> 
+    <br> 
+    <button type="submit">Submit</button> 
+  </form> 
+  <script src="script.js"></script> 
+</body> 
+</html> 
+ 
+Client/script.js 
+document.getElementById('fruitForm').addEventListener('submit', function(event) { 
+    event.preventDefault(); 
+    const name = document.getElementById('name').value; 
+    const price = document.getElementById('price').value; 
+    const xhr = new XMLHttpRequest(); 
+    xhr.open('POST', 'http://localhost:3000/addFruit', true); 
+xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8'); 
+xhr.onreadystatechange = function() { 
+if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) { 
+alert('Data sent successfully'); 
+} 
+}; 
+xhr.send(JSON.stringify({ name, price })); 
+}); 
+How to run the script 
+• Open terminal 
+• 2 ways to do it 
+o 1st way 
+▪ Cd server  
+▪ node server.js 
+o 2nd way 
+▪ node server/server.js 
+Output 
+ 
+Click on Submit and see the result in VS Code terminal 
+ 
+ 
+ 
