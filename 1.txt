@@ -1,0 +1,32 @@
+[
+{
+"_id": 1,
+"item": "book",
+"price": 10
+},
+{
+"_id": 2,
+"item": "pen",
+"price": 2
+},
+{
+"_id": 3,
+"item": "notebook",
+"price": 5
+}
+]
+
+Using MongoDB, create a collection called transactions in database usermanaged
+(drop if it already exists) and bulk load the data from a json file, transactions.json
+
+mongoimport --db usermanaged --collection transactions --file transactions.json --
+jsonArray –drop
+
+-db usermanaged : creates a database named usermanaged
+–collection transaction : name of transaction(filename).
+–file transactions.json: file name
+–jsonArray: Type of file.
+–drop: if the file exist drop the file.
+
+Open a new terminal in command prompt
+mongosh → show dbs → use database_name → show collections → db.collection_name.find()

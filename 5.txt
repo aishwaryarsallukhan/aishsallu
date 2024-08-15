@@ -1,0 +1,47 @@
+const fs = require('fs'); //import fs package
+const path = './data'; // directory/folder where files will be stored while creating the file
+
+if (!fs.existsSync(path)) {
+fs.mkdirSync(path);
+}
+
+const createFile = (filename, content) => {
+fs.writeFile(`${path}/${filename}`, content, (err) => {
+if (err) console.error('Error creating file:', err);
+else console.log('File created:', filename);
+});
+};
+
+
+const readFile = (filename) => {
+fs.readFile(`${path}/${filename}`, 'utf8', (err, data) => {
+if (err) console.error('Error reading file:', err);
+else console.log('File content:', data);
+});
+};
+
+const updateFile = (filename, content) => {
+fs.writeFile(`${path}/${filename}`, content, (err) => {
+if (err) console.error('Error updating file:', err);
+else console.log('File updated:', filename);
+});
+};
+
+const deleteFile = (filename) => {
+fs.unlink(`${path}/${filename}`, (err) => {
+if (err) console.error('Error deleting file:', err);
+else console.log('File deleted:', filename);
+});
+};
+
+const filename = 'sample.txt';
+
+
+createFile(filename, "Sample file created using node js");
+
+readFile(filename);
+
+call just like const content present above}
+updateFile(filename, 'Sample file is updated using node js');
+
+deleteFile(filename)

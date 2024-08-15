@@ -1,0 +1,38 @@
+const { MongoClient } = require('mongodb');
+const url = 'mongodb://localhost:27017';
+const dbName = 'school';
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+async function main() {
+try {
+
+await client.connect();
+console.log("Connected successfully to server");
+
+const db = client.db(dbName);
+
+const collection = db.collection('students');
+
+const studentData = {
+usn: '1MS20CS001',
+name: 'John Doe',
+sem: 6,
+year_of_admission: 2020
+};
+const insertResult = await collection.insertOne(studentData);
+console.log('Inserted document:', insertResult.ops);
+
+async function searchStudentsByName(partialName) {
+const regex = new RegExp(partialName, 'i'); // Create a case-insensitive regex
+const results = await collection.find({ name: regex }).toArray();
+return results;
+}
+const partialName = 'ABC'; 
+const searchResults = await searchStudentsByName(partialName);
+console.log('Search results:', searchResults);
+} catch (err) {
+console.error('Error occurred:', err);
+} finally {
+await client.close();
+}
+}
+main().catch(console.error);
